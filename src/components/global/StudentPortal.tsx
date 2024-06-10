@@ -10,6 +10,7 @@ import {
   HoverCardContent,
   HoverCardTrigger,
 } from "@/components/ui/hover-card";
+import { toast } from "sonner";
 
 const StudentPortal: React.FC = () => {
   const enrolledCourses = useSelector(
@@ -20,7 +21,13 @@ const StudentPortal: React.FC = () => {
   console.log("Enrolled", enrolledCourses);
 
   const handleCourseComplete = (courseId: number) => {
-    setCompletedCourses([...completedCourses, courseId]);
+    if (completedCourses.includes(courseId)) {
+      setCompletedCourses(completedCourses.filter((id) => id !== courseId));
+      toast("Course marked as incomplete!");
+    } else {
+      setCompletedCourses([...completedCourses, courseId]);
+      toast("Course marked as completed");
+    }
   };
 
   return (
@@ -118,7 +125,9 @@ const StudentPortal: React.FC = () => {
                       className="w-full"
                       onClick={() => handleCourseComplete(course.id)}
                     >
-                      Mark as Completed
+                      {completedCourses.includes(course.id)
+                        ? "Mark as Incomplete"
+                        : "Mark as Completed"}
                     </Button>
                   </div>
                 </div>
